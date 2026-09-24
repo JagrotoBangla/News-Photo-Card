@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jago Chandpur - Studio Pro Photo Card Generation System</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Noto+Serif+Bengali:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
+
+:root {
+  --primary-navy: #0A192F;
+  --accent-blue: #0066FF;
+  --vibrant-cyan: #00D2FF;
+  --crimson-red: #E63946;
+  --warm-gold: #FFB703;
+  --surface-bg: #0F172A;
+  --panel-bg: #1E293B;
+  --input-bg: #334155;
+  --text-primary: #F8FAFC;
+  --text-muted: #94A3B8;
+  --border-color: #334155;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--surface-bg);
+  font-family: 'Hind Siliguri', 'Plus Jakarta Sans', sans-serif;
+  color: var(--text-primary);
+  min-height: 100vh;
+  padding: 24px;
+}
+
+.studio-container {
+  max-width: 1600px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 480px 1fr;
+  gap: 32px;
+}
+
+/* Controls Panel */
+.control-panel {
+  background: var(--panel-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 28px;
+  height: fit-content;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+
+.brand-header {
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.brand-header h1 {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-header h1::before {
+  content: '';
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  background: var(--accent-blue);
+  border-radius: 50%;
+  box-shadow: 0 0 12px var(--accent-blue);
+}
+
+.brand-header p {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.form-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+input[type="text"], textarea {
+  background: var(--input-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 12px 14px;
+  color: #fff;
+  font-family: inherit;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+input[type="text"]:focus, textarea:focus {
+  outline: none;
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.2);
+}
+
+textarea {
+  resize: vertical;
+  min-height: 70px;
+}
+
+.file-input-wrapper {
+  position: relative;
+  background: var(--input-bg);
+  border: 1px dashed #475569;
+  border-radius: 10px;
+  padding: 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.file-input-wrapper:hover {
+  border-color: var(--accent-blue);
+}
+
+.file-input-wrapper input[type="file"] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.file-input-label {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.range-control {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.range-control input[type="range"] {
+  flex: 1;
+  accent-color: var(--accent-blue);
+}
+
+.range-val {
+  background: var(--input-bg);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.checkbox-group input {
+  accent-color: var(--accent-blue);
+  width: 16px;
+  height: 16px;
+}
+
+.action-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.btn {
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-primary {
+  background: var(--accent-blue);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #0052cc;
+  box-shadow: 0 4px 12px rgba(0, 102, 255, 0.3);
+}
+
+.btn-dark {
+  background: #0F172A;
+  color: white;
+  border: 1px solid var(--border-color);
+}
+
+.btn-dark:hover {
+  background: #1E293B;
+}
+
+.btn-secondary {
+  background: #334155;
+  color: white;
+}
+
+.btn-danger {
+  background: rgba(230, 57, 70, 0.15);
+  color: #ff6b6b;
+  border: 1px solid rgba(230, 57, 70, 0.3);
+}
+
+.btn-danger:hover {
+  background: rgba(230, 57, 70, 0.25);
+}
+
+/* Stage & Preview Engine */
+.stage-area {
+  background: #0B1120;
+  border-radius: 20px;
+  border: 1px solid var(--border-color);
+  padding: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  overflow: auto;
+  position: relative;
+}
+
+.preview-scaler {
+  width: 1080px;
+  height: 1350px;
+  transform-origin: top center;
+  flex: none;
+}
+
+/* --- THE CANVAS ARTWORK (1080x1350 Exact) --- */
+.card-canvas {
+  width: 1080px;
+  height: 1350px;
+  background: #FFFFFF;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Canvas Decorative Elements */
+.canvas-top-bar {
+  height: 10px;
+  width: 100%;
+  background: linear-gradient(90deg, var(--accent-blue) 0%, var(--vibrant-cyan) 50%, var(--warm-gold) 100%);
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+}
+
+/* Canvas Header */
+.canvas-header {
+  position: absolute;
+  top: 25px;
+  left: 48px;
+  right: 48px;
+  height: 130px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 5;
+}
+
+.slogan-badge {
+  background: #F1F5F9;
+  border: 1px solid #E2E8F0;
+  border-radius: 16px;
+  padding: 14px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 620px;
+}
+
+.slogan-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--accent-blue);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.slogan-tag-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--crimson-red);
+  border-radius: 50%;
+}
+
+.slogan-text {
+  font-family: 'Noto Serif Bengali', serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: #0F172A;
+  line-height: 1.2;
+}
+
+/* লোগো কন্টেইনার বড় করা হয়েছে */
+.logo-container {
+  height: 110px;
+  width: 300px;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 16px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+}
+
+.logo-container img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+/* Main Image Frame */
+.media-frame {
+  position: absolute;
+  top: 170px;
+  left: 48px;
+  right: 48px;
+  height: 580px;
+  border-radius: 24px;
+  overflow: hidden;
+  background: #E2E8F0;
+  box-shadow: 0 12px 24px -6px rgba(15, 23, 42, 0.12);
+}
+
+.media-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: none;
+}
+
+.media-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #E2E8F0 0%, #CBD5E1 100%);
+  color: #64748B;
+  gap: 12px;
+}
+
+.media-placeholder svg {
+  width: 64px;
+  height: 64px;
+  fill: currentColor;
+}
+
+.media-badge {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(8px);
+  color: #FFFFFF;
+  padding: 8px 18px;
+  border-radius: 30px;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.media-badge::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  background: var(--crimson-red);
+  border-radius: 50%;
+}
+
+/* News Content Box */
+.content-box {
+  position: absolute;
+  top: 775px;
+  left: 48px;
+  right: 48px;
+  bottom: 180px;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 24px;
+  padding: 32px 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-shadow: 0 10px 30px -5px rgba(0,0,0,0.05);
+}
+
+.sub-headline {
+  display: inline-block;
+  background: #EFF6FF;
+  border: 1px solid #DBEAFE;
+  color: var(--accent-blue);
+  padding: 6px 20px;
+  border-radius: 20px;
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  max-width: 90%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.headline-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.main-headline {
+  font-family: 'Noto Serif Bengali', serif;
+  color: #0F172A;
+  font-size: 50px;
+  font-weight: 900;
+  line-height: 1.25;
+  white-space: pre-line;
+  word-break: break-word;
+}
+
+.divider-line {
+  width: 120px;
+  height: 5px;
+  background: linear-gradient(90deg, var(--accent-blue), var(--vibrant-cyan));
+  border-radius: 10px;
+  margin: 16px 0;
+}
+
+.details-pill {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  padding: 8px 20px;
+  border-radius: 30px;
+  font-family: 'Noto Serif Bengali', serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #334155;
+}
+
+.details-label {
+  background: var(--primary-navy);
+  color: white;
+  font-family: 'Hind Siliguri', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 2px 10px;
+  border-radius: 12px;
+}
+
+/* Footer Ad Banner */
+.ad-banner-slot {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 1080px;
+  height: 150px;
+  background: #F1F5F9;
+  border-top: 1px solid #E2E8F0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.ad-banner-slot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: none;
+}
+
+.ad-placeholder {
+  color: #94A3B8;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+/* Responsive UI logic */
+@media (max-width: 1200px) {
+  .studio-container {
+    grid-template-columns: 1fr;
+  }
+  .stage-area {
+    order: -1;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="studio-container">
+  <!-- Left Side Control Panel -->
+  <div class="control-panel">
+    <div class="brand-header">
+      <h1>Jago Chandpur Studio Pro</h1>
+      <p>প্রফেশনাল নিউজ ফটোকার্ড জেনারেটর সিস্টেম</p>
+    </div>
+
+    <div class="form-grid">
+      <div class="field-group">
+        <label>নিউজের ছবি</label>
+        <div class="file-input-wrapper">
+          <span class="file-input-label" id="photoName">ছবি সিলেক্ট করতে ক্লিক করুন</span>
+          <input id="photoInput" type="file" accept="image/*">
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label>ব্র্যান্ড লোগো</label>
+        <div class="file-input-wrapper">
+          <span class="file-input-label" id="logoName">কাস্টম লোগো আপলোড করুন</span>
+          <input id="logoInput" type="file" accept="image/*">
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label>উপরের স্লোগান</label>
+        <textarea id="sloganInput">সংবাদ মানুষের জানার অধিকার নিশ্চিত করে।</textarea>
+      </div>
+
+      <div class="field-group">
+        <label>সাব-শিরোনাম (ঐচ্ছিক)</label>
+        <input id="subHeadlineInput" type="text" value="কুমিল্লায় কলেজছাত্র খুনে গ্রেপ্তার ৩">
+      </div>
+
+      <div class="field-group">
+        <label>প্রধান শিরোনাম</label>
+        <textarea id="headlineInput">ফরিদগঞ্জে কলেজছাত্র হত্যার ঘটনায় ৩ জন গ্রেপ্তার</textarea>
+      </div>
+
+      <div class="field-group">
+        <label>ছবি ব্যাজ টেক্সট</label>
+        <input id="badgeInput" type="text" value="JAGO CHANDPUR">
+      </div>
+
+      <div class="field-group">
+        <label>বিস্তারিত তথ্য নির্দেশক</label>
+        <input id="detailsInput" type="text" value="কমেন্টে দেখুন">
+      </div>
+
+      <div class="field-group">
+        <label>বিজ্ঞাপন ব্যানার (১০৮০ × ১৫০)</label>
+        <div class="file-input-wrapper">
+          <span class="file-input-label" id="adName">ব্যানার ইমেজ আপলোড করুন</span>
+          <input id="adInput" type="file" accept="image/*">
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label>শিরোনাম ফন্ট সাইজ (সর্বোচ্চ)</label>
+        <div class="range-control">
+          <input id="fontSize" type="range" min="36" max="64" value="50">
+          <span id="fontSizeValue" class="range-val">50px</span>
+        </div>
+      </div>
+
+      <div class="checkbox-group">
+        <input id="showBadge" type="checkbox" checked>
+        <label for="showBadge">ছবি ব্যাজ প্রদর্শন করুন</label>
+      </div>
+
+      <div class="action-buttons">
+        <button class="btn btn-primary" onclick="exportCard('png')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          PNG ডাউনলোড
+        </button>
+        <button class="btn btn-dark" onclick="exportCard('jpeg')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          JPG ডাউনলোড
+        </button>
+        <button class="btn btn-secondary" onclick="resetDefaults()">রিসেট</button>
+        <button class="btn btn-danger" onclick="clearMedia()">ছবি সরান</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Side Interactive Studio Stage -->
+  <div class="stage-area" id="stageArea">
+    <div class="preview-scaler" id="previewScaler">
+      
+      <!-- Studio Card Target Element -->
+      <div id="cardCanvas" class="card-canvas">
+        <div class="canvas-top-bar"></div>
+
+        <!-- Header -->
+        <div class="canvas-header">
+          <div class="slogan-badge">
+            <div class="slogan-tag">
+              <span class="slogan-tag-dot"></span>
+              নিউজ ফটোকার্ড
+            </div>
+            <div id="slogan" class="slogan-text">সংবাদ মানুষের জানার অধিকার নিশ্চিত করে।</div>
+          </div>
+          <div class="logo-container">
+            <img id="logoImg" src="" alt="Jago Chandpur Logo" style="display:none;">
+            <svg id="logoFallback" width="260" height="70" viewBox="0 0 260 70">
+              <text x="10" y="48" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="28" fill="#0A192F">JAGO</text>
+              <text x="100" y="48" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="28" fill="#0066FF">CHANDPUR</text>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Main News Image Frame -->
+        <div class="media-frame">
+          <div id="photoBadge" class="media-badge">JAGO CHANDPUR</div>
+          <img id="mediaImg" class="media-image" alt="News Photo">
+          <div id="mediaPlaceholder" class="media-placeholder">
+            <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zm-5.04-6.71l-2.75 3.54-1.96-2.36L6.5 17h11l-3.54-4.71z"/></svg>
+            <span>এখানে নিউজের ছবি প্রদর্শিত হবে</span>
+          </div>
+        </div>
+
+        <!-- News Content Body -->
+        <div class="content-box">
+          <div id="subHeadline" class="sub-headline">কুমিল্লায় কলেজছাত্র খুনে গ্রেপ্তার ৩</div>
+          <div class="headline-wrap">
+            <h1 id="mainHeadline" class="main-headline">ফরিদগঞ্জে কলেজছাত্র হত্যার ঘটনায় ৩ জন গ্রেপ্তার</h1>
+          </div>
+          <div class="divider-line"></div>
+          <div class="details-pill">
+            <span class="details-label">বিস্তারিত</span>
+            <span id="detailsText">কমেন্টে দেখুন</span>
+          </div>
+        </div>
+
+        <!-- Ad Slot Footer -->
+        <div class="ad-banner-slot">
+          <img id="adBannerImg" alt="Advertisement Banner">
+          <div id="adPlaceholder" class="ad-placeholder">বিজ্ঞাপন ব্যানার স্পেস (১০৮০ × ১৫০)</div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+  const $ = id => document.getElementById(id);
+
+  // Dynamic Scale Preview Engine
+  function applyResponsiveScale() {
+    const stage = $('stageArea');
+    const scaler = $('previewScaler');
+    const padding = 64;
+    const availableWidth = stage.clientWidth - padding;
+    
+    if (availableWidth < 1080) {
+      const scaleFactor = availableWidth / 1080;
+      scaler.style.transform = `scale(${scaleFactor})`;
+      scaler.style.marginBottom = `-${1350 * (1 - scaleFactor)}px`;
+    } else {
+      scaler.style.transform = 'scale(1)';
+      scaler.style.marginBottom = '0px';
+    }
+  }
+
+  window.addEventListener('resize', applyResponsiveScale);
+  document.addEventListener('DOMContentLoaded', applyResponsiveScale);
+
+  // Auto-Fit Headline Font Size Logic
+  function adjustHeadlineFont() {
+    const headline = $('mainHeadline');
+    const maxFontSize = parseInt($('fontSize').value);
+    headline.style.fontSize = `${maxFontSize}px`;
+
+    const container = headline.parentElement;
+    let currentSize = maxFontSize;
+
+    while ((headline.offsetHeight > container.offsetHeight || headline.offsetWidth > container.offsetWidth) && currentSize > 24) {
+      currentSize--;
+      headline.style.fontSize = `${currentSize}px`;
+    }
+  }
+
+  // Event Listeners for Live Inputs
+  $('sloganInput').addEventListener('input', e => {$('slogan').innerText = e.target.value || '';
+  });
+
+  $('subHeadlineInput').addEventListener('input', e => {
+    const val = e.target.value.trim();
+    const elem = $('subHeadline');
+    if (val) {
+      elem.style.display = 'inline-block';
+      elem.innerText = val;
+    } else {
+      elem.style.display = 'none';
+    }
+    adjustHeadlineFont();
+  });
+
+  $('headlineInput').addEventListener('input', e => {$('mainHeadline').innerText = e.target.value || '';
+    adjustHeadlineFont();
+  });
+
+  $('badgeInput').addEventListener('input', e => {$('photoBadge').innerText = e.target.value || '';
+  });
+
+  $('detailsInput').addEventListener('input', e => {$('detailsText').innerText = e.target.value || '';
+  });
+
+  $('fontSize').addEventListener('input', e => {$('fontSizeValue').innerText = `${e.target.value}px`;
+    adjustHeadlineFont();
+  });
+
+  $('showBadge').addEventListener('change', e => {$('photoBadge').style.display = e.target.checked ? 'flex' : 'none';
+  });
+
+  // Image Upload Handlers
+  function bindImageUpload(inputId, imgId, placeholderId, labelId) {
+    $(inputId).addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          $(imgId).src = evt.target.result;
+          $(imgId).style.display = 'block';
+          if(placeholderId) $(placeholderId).style.display = 'none';
+          if(labelId) $(labelId).innerText = file.name;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  }
+
+  bindImageUpload('photoInput', 'mediaImg', 'mediaPlaceholder', 'photoName');
+  bindImageUpload('adInput', 'adBannerImg', 'adPlaceholder', 'adName');
+
+  // Custom Logo Upload Handler
+  $('logoInput').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        $('logoImg').src = evt.target.result;
+        $('logoImg').style.display = 'block';
+        $('logoFallback').style.display = 'none';$('logoName').innerText = file.name;
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  // Control Functions
+  function clearMedia() {
+    $('mediaImg').src = '';
+    $('mediaImg').style.display = 'none';$('mediaPlaceholder').style.display = 'flex';
+    $('photoInput').value = '';$('photoName').innerText = 'ছবি সিলেক্ট করতে ক্লিক করুন';
+  }
+
+  function resetDefaults() {
+    $('sloganInput').value = 'সংবাদ মানুষের জানার অধিকার নিশ্চিত করে।';
+    $('slogan').innerText =$('sloganInput').value;
+
+    $('subHeadlineInput').value = 'কুমিল্লায় কলেজছাত্র খুনে গ্রেপ্তার ৩';
+    $('subHeadline').style.display = 'inline-block';
+    $('subHeadline').innerText =$('subHeadlineInput').value;
+
+    $('headlineInput').value = 'ফরিদগঞ্জে কলেজছাত্র হত্যার ঘটনায় ৩ জন গ্রেপ্তার';
+    $('mainHeadline').innerText =$('headlineInput').value;
+
+    $('badgeInput').value = 'JAGO CHANDPUR';
+    $('photoBadge').innerText =$('badgeInput').value;
+
+    $('detailsInput').value = 'কমেন্টে দেখুন';
+    $('detailsText').innerText =$('detailsInput').value;
+
+    $('fontSize').value = 50;
+    $('fontSizeValue').innerText = '50px';
+
+    clearMedia();
+    adjustHeadlineFont();
+  }
+
+  // High Resolution Render Export Logic
+  function exportCard(format) {
+    const canvasContainer = $('cardCanvas');
+    
+    // Unscale temporarily for optimal clear canvas capture
+    const scaler = $('previewScaler');
+    const currentTransform = scaler.style.transform;
+    scaler.style.transform = 'scale(1)';
+
+    html2canvas(canvasContainer, {
+      width: 1080,
+      height: 1350,
+      scale: 2, // High DPI capture
+      useCORS: true,
+      backgroundColor: '#FFFFFF'
+    }).then(canvas => {
+      // Re-apply scale layout
+      scaler.style.transform = currentTransform;
+
+      const link = document.createElement('a');
+      link.download = `JagoChandpur_NewsCard_${Date.now()}.${format}`;
+      link.href = canvas.toDataURL(`image/${format}`, 0.95);
+      link.click();
+    });
+  }
+
+  // Initial adjustment trigger
+  setTimeout(adjustHeadlineFont, 300);
+</script>
+</body>
+</html>
